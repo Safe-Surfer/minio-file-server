@@ -99,7 +99,6 @@ pages:
   before_script:
     - pip install mkdocs-material
   script:
-  - rm -r public
   - mkdocs build
   - mv site public
   artifacts:
