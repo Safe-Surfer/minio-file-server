@@ -1,0 +1,23 @@
+site_name: MinIO-File-Server
+strict: true
+repo_name: "safesurfer/minio-file-server"
+repo_url: https://gitlab.com/safesurfer/minio-file-server
+site_url: https://safesurfer.gitlab.io/minio-file-server
+
+markdown_extensions:
+  - codehilite
+  - meta
+  - toc:
+      permalink: " ¶"
+
+theme:
+  name: material
+  features:
+    - tabs
+    - instant
+  palette:
+    primary: "blue"
+    accent: "green"
+
+nav:
+  - Welcome: index.md
