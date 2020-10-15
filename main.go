@@ -34,15 +34,12 @@ func handleWebserver() {
 	minioClient, err := minio.Open(minioHost, minioAccessKey, minioSecretKey, minioUseSSLBool)
 	if err != nil {
 		panic(err)
-		return
 	}
 
 	router := mux.NewRouter().StrictSlash(true)
 	for _, endpoint := range routes.GetEndpoints("/", minioClient) {
 		router.HandleFunc(endpoint.EndpointPath, endpoint.HandlerFunc).Methods(endpoint.HTTPMethods...)
 	}
-
-	router.HandleFunc("/{.*}", routes.APIUnknownEndpoint)
 
 	router.Use(common.Logging)
 
