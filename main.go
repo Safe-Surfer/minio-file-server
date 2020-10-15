@@ -7,20 +7,33 @@ package main
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 
 	"gitlab.com/safesurfer/minio-file-server/pkg/common"
+	"gitlab.com/safesurfer/minio-file-server/pkg/minio"
 	"gitlab.com/safesurfer/minio-file-server/pkg/routes"
 )
 
 func handleWebserver() {
 	// bring up the API
 	port := common.GetAppPort()
+	minioHost := common.GetAppMinioHost()
+	minioAccessKey := common.GetAppMinioAccessKey()
+	minioSecretKey := common.GetAppMinioSecretKey()
+	minioUseSSL := common.GetAppMinioUseSSL()
+	minioUseSSLBool, err := strconv.ParseBool(minioUseSSL)
+	minioClient, err := minio.Open(minioHost, minioAccessKey, minioSecretKey, minioUseSSLBool)
+	if err != nil {
+		panic(err)
+		return
+	}
+
 	router := mux.NewRouter().StrictSlash(true)
-	for _, endpoint := range routes.GetEndpoints("/") {
+	for _, endpoint := range routes.GetEndpoints("/", minioClient) {
 		router.HandleFunc(endpoint.EndpointPath, endpoint.HandlerFunc).Methods(endpoint.HTTPMethods...)
 	}
 

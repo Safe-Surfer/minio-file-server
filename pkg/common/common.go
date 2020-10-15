@@ -18,6 +18,36 @@ const (
 	AppBuildVersion = "0.0.0"
 )
 
+// GetAppMinioAccessKey ...
+// return the accessKey for file storage
+func GetAppMinioAccessKey() (output string) {
+	return GetEnvOrDefault("APP_MINIO_ACCESS_KEY", "")
+}
+
+// GetAppMinioSecretKey ...
+// return the secretKey for file storage
+func GetAppMinioSecretKey() (output string) {
+	return GetEnvOrDefault("APP_MINIO_SECRET_KEY", "")
+}
+
+// GetAppMinioBucket ...
+// return the bucket for file storage
+func GetAppMinioBucket() (output string) {
+	return GetEnvOrDefault("APP_MINIO_BUCKET", "")
+}
+
+// GetAppMinioHost ...
+// return the host for file storage
+func GetAppMinioHost() (output string) {
+	return GetEnvOrDefault("APP_MINIO_HOST", "")
+}
+
+// GetAppMinioUseSSL ...
+// return if the file storage should use SSL
+func GetAppMinioUseSSL() (output string) {
+	return GetEnvOrDefault("APP_MINIO_USE_SSL", "")
+}
+
 func GetEnvOrDefault(envName string, defaultValue string) (output string) {
 	output = os.Getenv(envName)
 	if output == "" {

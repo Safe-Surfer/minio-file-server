@@ -1,9 +1,10 @@
 package routes
 
 import (
+	minio "github.com/minio/minio-go/v7"
 	"gitlab.com/safesurfer/minio-file-server/pkg/types"
 )
 
-func GetEndpoints(endpointPrefix string) types.Endpoints {
+func GetEndpoints(endpointPrefix string, minioClient *minio.Client) types.Endpoints {
 	return types.Endpoints{}
 }
