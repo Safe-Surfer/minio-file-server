@@ -1,0 +1,39 @@
+#+TITLE: Development
+
+* Preparations
+
+Add the Helm repo:
+#+begin_src shell :results silent
+  helm repo add minio https://helm.min.io/
+#+end_src
+
+Create a development namespace:
+#+begin_src shell :results silent
+kubectl create ns minio-file-server-dev
+#+end_src
+
+* Install
+
+#+begin_src shell :results silent
+  helm install minio \
+    -n minio-file-server-dev \
+    --set accessKey="minio-file-server"  \
+    --set secretKey="minio-file-server" \
+    --set defaultBucket.enabled=true \
+    --set defaultBucket.name=minio \
+    --set resources.requests.memory=1Gi \
+    minio/minio
+#+end_src
+
+* Accessing
+
+#+begin_src shell :results silent :async yes
+  kubectl -n minio-file-server-dev port-forward svc/minio 9000
+#+end_src
+
+* Uninstall
+
+#+begin_src shell :results silent
+  helm uninstall minio -n minio-file-server-dev
+#+end_src
+
