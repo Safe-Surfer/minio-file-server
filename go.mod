@@ -7,6 +7,7 @@ require (
 	github.com/go-ini/ini v1.62.0 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/gorilla/mux v1.8.0
+	github.com/joho/godotenv v1.3.0
 	github.com/minio/minio-go v1.0.0
 	github.com/minio/minio-go/v7 v7.0.5
 	github.com/rs/cors v1.7.0

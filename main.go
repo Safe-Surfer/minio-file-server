@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"github.com/joho/godotenv"
 
 	"gitlab.com/safesurfer/minio-file-server/pkg/common"
 	"gitlab.com/safesurfer/minio-file-server/pkg/minio"
@@ -20,6 +21,10 @@ import (
 
 func handleWebserver() {
 	// bring up the API
+
+	envFile := common.GetAppEnvFile()
+	_ = godotenv.Load(envFile)
+
 	port := common.GetAppPort()
 	minioHost := common.GetAppMinioHost()
 	minioAccessKey := common.GetAppMinioAccessKey()

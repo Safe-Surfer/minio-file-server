@@ -18,6 +18,12 @@ const (
 	AppBuildVersion = "0.0.0"
 )
 
+// GetAppEnvFile ...
+// location of an env file to load
+func GetAppEnvFile() (output string) {
+	return GetEnvOrDefault("APP_ENV_FILE", ".env")
+}
+
 // GetAppMinioAccessKey ...
 // return the accessKey for file storage
 func GetAppMinioAccessKey() (output string) {
