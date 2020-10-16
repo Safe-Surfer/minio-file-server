@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "minio-file-server.fullname" . }}
+  labels:
+    {{- include "minio-file-server.labels" . | nindent 4 }}
+{{- if .Values.labels }}
+{{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      app: io.safesurfer.minio-file-server
+      {{- include "minio-file-server.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        app: io.safesurfer.minio-file-server
+        {{- include "minio-file-server.selectorLabels" . | nindent 8 }}
+      {{- if .Values.labels }}
+      {{- with .Values.labels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "minio-file-server.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          {{- if .Values.siteTitle }}
+            - name: APP_SITE_TITLE
+              value: {{ .Values.siteTitle }}
+          {{- end }}
+          {{- if .Values.minio.enabled }}
+            - name: APP_MINIO_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "minio-file-server.fullname" . }}
+                  key: host
+            - name: APP_MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "minio-file-server.fullname" . }}
+                  key: accessKey
+            - name: APP_MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "minio-file-server.fullname" . }}
+                  key: secretKey
+            - name: APP_MINIO_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "minio-file-server.fullname" . }}
+                  key: bucket
+            - name: APP_MINIO_USE_SSL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "minio-file-server.fullname" . }}
+                  key: use-ssl
+          {{- end }}
+          {{- with .Values.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
