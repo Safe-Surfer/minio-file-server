@@ -4,19 +4,19 @@ COPY main.go /app/
 COPY pkg /app/pkg
 COPY cmd /app/cmd
 COPY go.* /app/
-ARG AppBuildVersion="0.0.0"
-ARG AppBuildHash="???"
-ARG AppBuildDate="???"
-ARG AppBuildMode="development"
+ARG APP_BUILD_VERSION="0.0.0"
+ARG APP_BUILD_HASH="???"
+ARG APP_BUILD_DATE="???"
+ARG APP_BUILD_MODE="development"
 ARG GOARCH=""
 RUN CGO_ENABLED=0 GOOS=linux GOARCH="$GOARCH" go build \
   -a \
   -installsuffix cgo \
   -ldflags "-extldflags '-static' -s -w \
-    -X gitlab.com/safesurfer/minio-file-server/pkg/common.AppBuildVersion=$AppBuildVersion \
-    -X gitlab.com/safesurfer/minio-file-server/pkg/common.AppBuildHash=$AppBuildHash \
-    -X gitlab.com/safesurfer/minio-file-server/pkg/common.AppBuildDate=$AppBuildDate \
-    -X gitlab.com/safesurfer/minio-file-server/pkg/common.AppBuildMode=$AppBuildMode" \
+    -X gitlab.com/safesurfer/minio-file-server/pkg/common.AppBuildVersion=$APP_BUILD_VERSION \
+    -X gitlab.com/safesurfer/minio-file-server/pkg/common.AppBuildHash=$APP_BUILD_HASH \
+    -X gitlab.com/safesurfer/minio-file-server/pkg/common.AppBuildDate=$APP_BUILD_DATE \
+    -X gitlab.com/safesurfer/minio-file-server/pkg/common.AppBuildMode=$APP_BUILD_MODE" \
   -o minio-file-server \
   main.go
 
