@@ -11,13 +11,43 @@ import (
 func GetEndpoints(endpointPrefix string, minioClient *minio.Client) types.Endpoints {
 	return types.Endpoints{
 		{
-			EndpointPath: "/",
-			HandlerFunc: ListObjects(minioClient),
+			EndpointPath: "/{*.}/{*.}/{*.}/{*.}",
+			HandlerFunc: GetOrListObject(minioClient),
+			HTTPMethods: []string{http.MethodGet},
+		},
+		{
+			EndpointPath: "/{*.}/{*.}/{*.}/",
+			HandlerFunc: GetOrListObject(minioClient),
+			HTTPMethods: []string{http.MethodGet},
+		},
+		{
+			EndpointPath: "/{*.}/{*.}/{*.}",
+			HandlerFunc: GetOrListObject(minioClient),
+			HTTPMethods: []string{http.MethodGet},
+		},
+		{
+			EndpointPath: "/{*.}/{*.}/",
+			HandlerFunc: GetOrListObject(minioClient),
+			HTTPMethods: []string{http.MethodGet},
+		},
+		{
+			EndpointPath: "/{*.}/{*.}",
+			HandlerFunc: GetOrListObject(minioClient),
+			HTTPMethods: []string{http.MethodGet},
+		},
+		{
+			EndpointPath: "/{*.}/",
+			HandlerFunc: GetOrListObject(minioClient),
 			HTTPMethods: []string{http.MethodGet},
 		},
 		{
 			EndpointPath: "/{*.}",
-			HandlerFunc: ListObjects(minioClient),
+			HandlerFunc: GetOrListObject(minioClient),
+			HTTPMethods: []string{http.MethodGet},
+		},
+		{
+			EndpointPath: "/",
+			HandlerFunc: GetOrListObject(minioClient),
 			HTTPMethods: []string{http.MethodGet},
 		},
 	}

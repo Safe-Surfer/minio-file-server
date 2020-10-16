@@ -26,3 +26,9 @@ type Endpoints []struct {
 	HandlerFunc  http.HandlerFunc
 	HTTPMethods  []string
 }
+
+type HTTPMethod string
+
+const (
+	HTTPMethodList HTTPMethod = "LIST"
+)
