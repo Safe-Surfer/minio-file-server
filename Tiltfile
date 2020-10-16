@@ -3,11 +3,11 @@ yaml = helm(
   name='minio-file-server-dev',
   namespace='minio-file-server-dev',
   set=[
-      "minio.host=9000",
+      "minio.host=minio:9000",
       "minio.bucket=bucket",
       "minio.SSL.enable=false",
-      "accessKey=minio-file-server",
-      "secretKey=minio-file-server",
+      "minio.accessKey=minio-file-server",
+      "minio.secretKey=minio-file-server",
       "service.type=NodePort"
   ]
   )
