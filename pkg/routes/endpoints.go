@@ -8,6 +8,8 @@ import (
 	"gitlab.com/safesurfer/minio-file-server/pkg/types"
 )
 
+// GetEndpoints ...
+// returns array of endpoints
 func GetEndpoints(endpointPrefix string, minioClient *minio.Client) types.Endpoints {
 	return types.Endpoints{
 		{

@@ -11,6 +11,7 @@ import (
 )
 
 // HealthHandler ...
+// serve health traffic
 func HealthHandler(minioClient *minio.Client) {
 	if common.GetAppHealthPortEnabled() != "true" {
 		return

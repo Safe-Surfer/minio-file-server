@@ -16,6 +16,8 @@ import (
 	"gitlab.com/safesurfer/minio-file-server/pkg/handlers"
 )
 
+// HandleWebserver ...
+// manages app initialisation
 func HandleWebserver() {
 	// bring up the API
 

@@ -17,6 +17,8 @@ import (
 	templating "gitlab.com/safesurfer/minio-file-server/pkg/templating"
 )
 
+// GetOrListObject ...
+// returns a list or path depending of the request
 func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		doneCh := make(chan struct{})
@@ -28,7 +30,7 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 				requestPath = ""
 			}
 			filesList := fileserverminio.List(minioClient, requestPath)
-			err, files := templating.Template(templating.TemplateListing, templating.TemplateListingObject{
+			files, err := templating.Template(templating.TemplateListing, templating.TemplateListingObject{
 				SiteTitle: common.GetAppSiteTitle(),
 				Path:      requestPath,
 				Items:     filesList,
@@ -44,7 +46,7 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 			return
 		}
 
-		err, object := fileserverminio.Get(minioClient, requestPath)
+		object, err := fileserverminio.Get(minioClient, requestPath)
 		if err != nil {
 			log.Printf("%#v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -56,9 +58,11 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 	}
 }
 
+// GetRoot ...
+// returns an index with the site title and path
 func GetRoot(w http.ResponseWriter, r *http.Request) {
 	requestPath := r.URL.Path
-	err, index := templating.Template(templating.TemplateIndex, templating.TemplateIndexObject{
+	index, err := templating.Template(templating.TemplateIndex, templating.TemplateIndexObject{
 		SiteTitle: common.GetAppSiteTitle(),
 		Path:      requestPath,
 	})
@@ -78,7 +82,7 @@ func Healthz(minioClient *minio.Client) http.HandlerFunc {
 		response := "App unhealthy"
 		code := http.StatusInternalServerError
 
-		err, exists := fileserverminio.BucketExists(minioClient)
+		exists, err := fileserverminio.BucketExists(minioClient)
 		if err == nil && exists == true {
 			response = "App healthy"
 			code = http.StatusOK

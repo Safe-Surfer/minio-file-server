@@ -6,14 +6,11 @@ package common
 
 import (
 	"net/http"
-	"time"
-	"encoding/json"
 	"os"
 	"log"
-
-	"gitlab.com/safesurfer/minio-file-server/pkg/types"
 )
 
+// AppBuild metadata
 const (
 	AppBuildVersion = "0.0.0"
 	AppBuildHash    = "???"
@@ -63,6 +60,8 @@ func GetAppMinioUseSSL() (output string) {
 	return GetEnvOrDefault("APP_MINIO_USE_SSL", "")
 }
 
+// GetEnvOrDefault ...
+// given an env var return it's value, else return a default
 func GetEnvOrDefault(envName string, defaultValue string) (output string) {
 	output = os.Getenv(envName)
 	if output == "" {
@@ -71,39 +70,30 @@ func GetEnvOrDefault(envName string, defaultValue string) (output string) {
 	return output
 }
 
+// GetAppHealthPortEnabled ...
+// enable the binding of a health port
 func GetAppHealthPortEnabled() (output string) {
 	return GetEnvOrDefault("APP_HEALTH_PORT_ENABLED", "true")
 }
 
+// GetAppHealthPort ...
+// the port to bind the health service to
 func GetAppHealthPort() (output string) {
 	return GetEnvOrDefault("APP_HEALTH_PORT", ":8081")
 }
 
+// GetAppPort ...
+// the port to serve web traffic on
 func GetAppPort() (output string) {
 	return GetEnvOrDefault("APP_PORT", ":8080")
 }
 
+// Logging ...
+// a basic middleware for logging
 func Logging(next http.Handler) http.Handler {
 	// log all requests
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%v %v %v %v %v %v", r.Method, r.URL, r.Proto, r.Response, r.RemoteAddr, r.Header)
+		log.Printf("%v %v %v %v %v %#v", r.Method, r.URL, r.Proto, r.Response, r.RemoteAddr, r.Header)
 		next.ServeHTTP(w, r)
 	})
-}
-
-func GetAppDistFolder() string {
-	appDistFolder := GetEnvOrDefault("APP_DIST_FOLDER", "./dist")
-	return appDistFolder
-}
-
-func JSONResponse(r *http.Request, w http.ResponseWriter, code int, output types.JSONMessageResponse) {
-	// simpilify sending a JSON response
-	output.Metadata.URL = r.RequestURI
-	output.Metadata.Timestamp = time.Now().Unix()
-	output.Metadata.Version = AppBuildVersion
-	response, _ := json.Marshal(output)
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	w.Write(response)
 }

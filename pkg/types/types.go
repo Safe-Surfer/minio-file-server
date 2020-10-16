@@ -8,27 +8,19 @@ import (
 	"net/http"
 )
 
-type JSONResponseMetadata struct {
-	URL       string `json:"selfLink"`
-	Version   string `json:"version"`
-	RequestId string `json:"requestId"`
-	Timestamp int64  `json:"timestamp"`
-	Response  string `json:"response"`
-}
-
-type JSONMessageResponse struct {
-	Metadata JSONResponseMetadata `json:"metadata"`
-	Spec     interface{}          `json:"spec"`
-}
-
+// Endpoints ...
+// array for endpoint fields
 type Endpoints []struct {
 	EndpointPath string
 	HandlerFunc  http.HandlerFunc
 	HTTPMethods  []string
 }
 
+// HTTPMethod ...
+// extra HTTP methods
 type HTTPMethod string
 
+// valid extra HTTPMethods
 const (
 	HTTPMethodList HTTPMethod = "LIST"
 )

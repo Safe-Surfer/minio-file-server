@@ -20,21 +20,25 @@ func Open(endpoint string, accessKey string, secretKey string, useSSL bool) (*mi
 	})
 }
 
-func Get(minioClient *minio.Client, filePath string) (err error, objectBytes []byte) {
+// Get ...
+// retrieves a given object
+func Get(minioClient *minio.Client, filePath string) (objectBytes []byte, err error) {
 	object, err := minioClient.GetObject(context.TODO(), common.GetAppMinioBucket(), filePath, minio.GetObjectOptions{})
 	if err != nil {
 		log.Printf("%#v\n", err)
-		return err, []byte{}
+		return []byte{}, err
 	}
 	defer object.Close()
 	objectBytes, err = ioutil.ReadAll(object)
 	if err != nil {
 		log.Printf("%#v\n", err)
-		return err, []byte{}
+		return []byte{}, err
 	}
-	return err, objectBytes
+	return objectBytes, err
 }
 
+// List ...
+// returns a list of files in a given path
 func List(minioClient *minio.Client, path string) []minio.ObjectInfo {
 	filesList := []minio.ObjectInfo{}
 	for message := range minioClient.ListObjects(context.TODO(), common.GetAppMinioBucket(), minio.ListObjectsOptions{Recursive: false, Prefix: path}) {
@@ -43,12 +47,15 @@ func List(minioClient *minio.Client, path string) []minio.ObjectInfo {
 	return filesList
 }
 
-func ListBuckets(minioClient *minio.Client) (err error, bucketList []minio.BucketInfo) {
-	bucketList, err = minioClient.ListBuckets(context.TODO())
-	return err, bucketList
+// ListBuckets ...
+// returns a list of the available buckets
+func ListBuckets(minioClient *minio.Client) ([]minio.BucketInfo, error) {
+	return minioClient.ListBuckets(context.TODO())
 }
 
-func BucketExists(minioClient *minio.Client) (err error, exists bool) {
+// BucketExists ...
+// returns if a bucket exists
+func BucketExists(minioClient *minio.Client) (exists bool, err error) {
 	exists, err = minioClient.BucketExists(context.TODO(), common.GetAppMinioBucket())
-	return err, exists
+	return exists, err
 }
