@@ -20,6 +20,11 @@ type TemplateListingObject struct {
 	Items     []minio.ObjectInfo
 }
 
+type TemplateIndexObject struct {
+	SiteTitle string
+	Path      string
+}
+
 func Template(templatePath TemplatePath, data interface{}) (error, string) {
 	template, err := template.ParseFiles(string(templatePath))
 	if err != nil {

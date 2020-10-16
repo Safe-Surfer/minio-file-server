@@ -49,3 +49,18 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 		w.Write(object)
 	}
 }
+
+func GetRoot(w http.ResponseWriter, r *http.Request) {
+	requestPath := r.URL.Path
+	err, index := templating.Template(templating.TemplateIndex, templating.TemplateIndexObject{
+		SiteTitle: common.GetAppSiteTitle(),
+		Path:      requestPath,
+	})
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("An error occurred"))
+		return
+	}
+	w.WriteHeader(200)
+	w.Write([]byte(index))
+}
