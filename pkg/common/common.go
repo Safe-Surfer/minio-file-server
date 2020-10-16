@@ -16,6 +16,9 @@ import (
 
 const (
 	AppBuildVersion = "0.0.0"
+	AppBuildHash    = "???"
+	AppBuildDate    = "???"
+	AppBuildMode    = "???"
 )
 
 // GetAppSiteTitle ...

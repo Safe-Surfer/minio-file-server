@@ -61,6 +61,6 @@ func GetRoot(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("An error occurred"))
 		return
 	}
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(index))
 }
