@@ -13,6 +13,7 @@ import (
 	"gitlab.com/safesurfer/minio-file-server/pkg/common"
 	"gitlab.com/safesurfer/minio-file-server/pkg/minio"
 	"gitlab.com/safesurfer/minio-file-server/pkg/routes"
+	"gitlab.com/safesurfer/minio-file-server/pkg/handlers"
 )
 
 func HandleWebserver() {
@@ -31,6 +32,8 @@ func HandleWebserver() {
 	if err != nil {
 		panic(err)
 	}
+
+	go handlers.HealthHandler(minioClient)
 
 	router := mux.NewRouter().StrictSlash(false)
 	for _, endpoint := range routes.GetEndpoints("/", minioClient) {

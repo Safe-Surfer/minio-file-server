@@ -42,3 +42,13 @@ func List(minioClient *minio.Client, path string) []minio.ObjectInfo {
 	}
 	return filesList
 }
+
+func ListBuckets(minioClient *minio.Client) (err error, bucketList []minio.BucketInfo) {
+	bucketList, err = minioClient.ListBuckets(context.TODO())
+	return err, bucketList
+}
+
+func BucketExists(minioClient *minio.Client) (err error, exists bool) {
+	exists, err = minioClient.BucketExists(context.TODO(), common.GetAppMinioBucket())
+	return err, exists
+}

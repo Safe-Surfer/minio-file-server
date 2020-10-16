@@ -71,6 +71,14 @@ func GetEnvOrDefault(envName string, defaultValue string) (output string) {
 	return output
 }
 
+func GetAppHealthPortEnabled() (output string) {
+	return GetEnvOrDefault("APP_HEALTH_PORT_ENABLED", "true")
+}
+
+func GetAppHealthPort() (output string) {
+	return GetEnvOrDefault("APP_HEALTH_PORT", ":8081")
+}
+
 func GetAppPort() (output string) {
 	return GetEnvOrDefault("APP_PORT", ":8080")
 }

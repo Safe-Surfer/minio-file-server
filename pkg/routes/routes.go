@@ -70,3 +70,22 @@ func GetRoot(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(index))
 }
+
+// Healthz ...
+// HTTP handler for health checks
+func Healthz(minioClient *minio.Client) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		response := "App unhealthy"
+		code := http.StatusInternalServerError
+
+		err, exists := fileserverminio.BucketExists(minioClient)
+		if err == nil && exists == true {
+			response = "App healthy"
+			code = http.StatusOK
+		} else {
+			log.Printf("Bucket '%s' exists: %#v\n", common.GetAppMinioBucket(), err.Error())
+		}
+		w.WriteHeader(code)
+		w.Write([]byte(response))
+	}
+}
