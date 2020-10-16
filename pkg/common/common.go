@@ -18,6 +18,12 @@ const (
 	AppBuildVersion = "0.0.0"
 )
 
+// GetAppSiteTitle ...
+// site title to template in
+func GetAppSiteTitle() (output string) {
+	return GetEnvOrDefault("APP_SITE_TITLE", "Minio-File-Server")
+}
+
 // GetAppEnvFile ...
 // location of an env file to load
 func GetAppEnvFile() (output string) {

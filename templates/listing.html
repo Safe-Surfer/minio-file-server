@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>{{ $.SiteTitle }}</title>
+    </head>
+    <body>
+        <h1>{{ $.SiteTitle }}</h1>
+        <h3>Viewing path {{ $.Path }}</h3>
+        <br/>
+        <a href="{{ $.Path }}"> . </a>
+        <br/>
+        <a href="{{ $.Path }}.."> .. </a>
+        <br/>
+        {{ range $.Items }}
+        <a href="{{ .Key }}"> {{ .Key }} </a>
+        <br/>
+        {{ end }}
+    </body>
+</html>

@@ -35,10 +35,10 @@ func Get(minioClient *minio.Client, filePath string) (err error, objectBytes []b
 	return err, objectBytes
 }
 
-func List(minioClient *minio.Client, path string) []string {
-	filesList := []string{}
+func List(minioClient *minio.Client, path string) []minio.ObjectInfo {
+	filesList := []minio.ObjectInfo{}
 	for message := range minioClient.ListObjects(context.TODO(), common.GetAppMinioBucket(), minio.ListObjectsOptions{Recursive: false, Prefix: path}) {
-		filesList = append(filesList, message.Key)
+		filesList = append(filesList, message)
 	}
 	return filesList
 }
