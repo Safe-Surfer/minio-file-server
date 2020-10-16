@@ -5,15 +5,13 @@
 package routes
 
 import (
-	"context"
-	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
+	"path/filepath"
 
 	minio "github.com/minio/minio-go/v7"
 
-	"gitlab.com/safesurfer/minio-file-server/pkg/common"
+	fileserverminio "gitlab.com/safesurfer/minio-file-server/pkg/minio"
 )
 
 func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
@@ -21,11 +19,9 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 		doneCh := make(chan struct{})
 		defer close(doneCh)
 
-		if strings.HasSuffix(r.URL.Path, "/") {
-			filesList := []string{}
-			for message := range minioClient.ListObjects(context.TODO(), common.GetAppMinioBucket(), minio.ListObjectsOptions{Recursive: false, Prefix: r.URL.Path}) {
-				filesList = append(filesList, message.Key)
-			}
+		requestPath := r.URL.Path
+		if strings.HasSuffix(requestPath, string(filepath.Separator)) {
+			filesList := fileserverminio.List(minioClient, requestPath)
 			files := ""
 			for _, fileName := range filesList {
 				files += fileName + "\n"
@@ -36,15 +32,13 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 
 		}
 
-		object, err := minioClient.GetObject(context.TODO(), common.GetAppMinioBucket(), r.URL.Path, minio.GetObjectOptions{})
+		err, object := fileserverminio.Get(minioClient, requestPath)
 		if err != nil {
-			log.Printf("%#v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("An error occurred"))
 			return
 		}
-		defer object.Close()
-		objectBytes, err := ioutil.ReadAll(object)
 		w.WriteHeader(http.StatusOK)
-		w.Write(objectBytes)
+		w.Write(object)
 	}
 }
