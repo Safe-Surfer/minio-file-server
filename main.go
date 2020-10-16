@@ -36,7 +36,7 @@ func handleWebserver() {
 		panic(err)
 	}
 
-	router := mux.NewRouter().StrictSlash(true)
+	router := mux.NewRouter().StrictSlash(false)
 	for _, endpoint := range routes.GetEndpoints("/", minioClient) {
 		router.HandleFunc(endpoint.EndpointPath, endpoint.HandlerFunc).Methods(endpoint.HTTPMethods...)
 	}
