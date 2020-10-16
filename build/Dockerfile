@@ -2,6 +2,7 @@ FROM golang:1.14.6-alpine3.11 AS build
 WORKDIR /app
 COPY main.go /app/
 COPY pkg /app/pkg
+COPY cmd /app/cmd
 COPY go.* /app/
 ARG AppBuildVersion="0.0.0"
 ARG AppBuildHash="???"
