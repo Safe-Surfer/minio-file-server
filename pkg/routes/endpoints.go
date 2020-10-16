@@ -47,7 +47,7 @@ func GetEndpoints(endpointPrefix string, minioClient *minio.Client) types.Endpoi
 		},
 		{
 			EndpointPath: "/",
-			HandlerFunc: GetRoot,
+			HandlerFunc: GetOrListObject(minioClient),
 			HTTPMethods: []string{http.MethodGet},
 		},
 	}

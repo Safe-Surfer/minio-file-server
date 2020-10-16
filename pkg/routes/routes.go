@@ -5,6 +5,7 @@
 package routes
 
 import (
+	"log"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -23,6 +24,9 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 
 		requestPath := r.URL.Path
 		if strings.HasSuffix(requestPath, string(filepath.Separator)) {
+			if requestPath == "/" {
+				requestPath = ""
+			}
 			filesList := fileserverminio.List(minioClient, requestPath)
 			err, files := templating.Template(templating.TemplateListing, templating.TemplateListingObject{
 				SiteTitle: common.GetAppSiteTitle(),
@@ -30,8 +34,9 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 				Items:     filesList,
 			})
 			if err != nil {
+				log.Printf("%#v\n", err)
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("An error occurred"))
+				w.Write([]byte("An error occurred with listing objects"))
 				return
 			}
 			w.WriteHeader(200)
@@ -41,8 +46,9 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 
 		err, object := fileserverminio.Get(minioClient, requestPath)
 		if err != nil {
+			log.Printf("%#v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("An error occurred"))
+			w.Write([]byte("An error occurred with retrieving the requested object"))
 			return
 		}
 		w.WriteHeader(http.StatusOK)

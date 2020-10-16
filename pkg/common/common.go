@@ -78,7 +78,7 @@ func GetAppPort() (output string) {
 func Logging(next http.Handler) http.Handler {
 	// log all requests
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%v %v %v %v %v", r.Method, r.URL, r.Proto, r.Response, r.RemoteAddr)
+		log.Printf("%v %v %v %v %v %v", r.Method, r.URL, r.Proto, r.Response, r.RemoteAddr, r.Header)
 		next.ServeHTTP(w, r)
 	})
 }

@@ -32,6 +32,7 @@ COPY --from=extras /etc/passwd /etc/passwd
 COPY --from=extras /etc/group /etc/group
 COPY --from=extras /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=extras /etc/ssl /etc/ssl
+COPY templates /app/templates
 EXPOSE 8080
 USER user
 ENTRYPOINT ["/app/minio-file-server"]
