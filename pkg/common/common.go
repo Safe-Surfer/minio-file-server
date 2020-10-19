@@ -60,16 +60,6 @@ func GetAppMinioUseSSL() (output string) {
 	return GetEnvOrDefault("APP_MINIO_USE_SSL", "")
 }
 
-// GetEnvOrDefault ...
-// given an env var return it's value, else return a default
-func GetEnvOrDefault(envName string, defaultValue string) (output string) {
-	output = os.Getenv(envName)
-	if output == "" {
-		output = defaultValue
-	}
-	return output
-}
-
 // GetAppHealthPortEnabled ...
 // enable the binding of a health port
 func GetAppHealthPortEnabled() (output string) {
@@ -86,6 +76,16 @@ func GetAppHealthPort() (output string) {
 // the port to serve web traffic on
 func GetAppPort() (output string) {
 	return GetEnvOrDefault("APP_PORT", ":8080")
+}
+
+// GetEnvOrDefault ...
+// given an env var return it's value, else return a default
+func GetEnvOrDefault(envName string, defaultValue string) (output string) {
+	output = os.Getenv(envName)
+	if output == "" {
+		output = defaultValue
+	}
+	return output
 }
 
 // Logging ...
