@@ -56,6 +56,6 @@
 | autoscaling.maxReplicas                       | The maximum amount of Pods to run                                                | `1`                                              |
 | autoscaling.targetCPUUtilizationPercentage    | The individual Pod CPU amount until autoscaling occurs                           | `80`                                             |
 | autoscaling.targetMemoryUtilizationPercentage | The individual Pod Memory amount until autoscaling occurs                        |
-| nodeSelector                                  | Delcare the node labels for Pod scheduling                                       | `{}`                                             |
+| nodeSelector                                  | Declare the node labels for Pod scheduling                                       | `{}`                                             |
 | tolerations                                   | Declare the toleration labels for Pod scheduling                                 | `[]`                                             |
 | affinity                                      | Declare the affinity settings for the Pod scheduling                             | `{}`                                             |
