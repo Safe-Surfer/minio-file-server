@@ -44,8 +44,9 @@ Bind ~:9000~ on your host to minio in the development cluster
 #+end_src
 
 * Configuring a ~.env~ file
+
+Write a configuration file, something similar to this in ~.env~ at the root of the repo:
 #+begin_src shell :tangle ../.env
-APP_MINIO_MAX_SIZE=
 APP_MINIO_HOST=localhost:9000
 APP_MINIO_ACCESS_KEY=minio-file-server
 APP_MINIO_SECRET_KEY=minio-file-server
