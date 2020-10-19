@@ -2,29 +2,35 @@
 
 * Helm
 
+** Preliminary steps
 Create a namespace:
 #+begin_src shell :results silent
   kubectl create ns minio-file-server
 #+end_src
 
+** Installation
 Install with Helm:
 #+begin_src shell :dir ./../ :results silent
   helm install minio-file-server-dev \
     -n minio-file-server-dev \
-    --set accessKey="minio-file-server" \
-    --set secretKey="minio-file-server" \
+    --set minio.accessKey="minio-file-server" \
+    --set minio.secretKey="minio-file-server" \
   deployments/minio-file-server
 #+end_src
 
+Note: to configure, please check out [[./configuration.md][the configuration docs]]
+
+** Upgrading versions
 Upgrade a release with Helm:
 #+begin_src shell :dir ./../ :results silent
   helm upgrade minio-file-server-dev \
     -n minio-file-server-dev \
-    --set accessKey="minio-file-server" \
-    --set secretKey="minio-file-server" \
+    --set minio.accessKey="minio-file-server" \
+    --set minio.secretKey="minio-file-server" \
   deployments/minio-file-server
 #+end_src
 
+** Uninstalling
 Uninstall with Helm:
 #+begin_src shell :dir ./../ :results silent
   helm uninstall minio-file-server-dev \

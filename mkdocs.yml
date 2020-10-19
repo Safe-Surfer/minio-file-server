@@ -22,3 +22,5 @@ theme:
 nav:
   - Welcome: index.md
   - Development: development.md
+  - Configuration: configuration.md
+  - Deployment: deployment.md

@@ -1,19 +1,32 @@
 #+TITLE: Development
 
 * Preparations
+** Install and bring up Minikube or Kind
+*** Kind
+Start the cluster:
+#+begin_src shell :results silent
+  kind create cluster
+#+end_src
 
-Add the Helm repo:
+*** Minikube
+Start the cluster:
+#+begin_src shell :results silent
+  minikube start
+#+end_src
+
+** Add the Helm repo
 #+begin_src shell :results silent
   helm repo add minio https://helm.min.io/
 #+end_src
 
-Create a development namespace:
+** Create a development namespace
 #+begin_src shell :results silent
-kubectl create ns minio-file-server-dev
+  kubectl create ns minio-file-server-dev
 #+end_src
 
 * Install
 
+Install Minio into:
 #+begin_src shell :results silent
   helm install minio \
     -n minio-file-server-dev \
@@ -25,14 +38,35 @@ kubectl create ns minio-file-server-dev
 #+end_src
 
 * Accessing
-
+Bind ~:9000~ on your host to minio in the development cluster
 #+begin_src shell :results silent :async yes
   kubectl -n minio-file-server-dev port-forward svc/minio 9000
 #+end_src
 
-* Uninstall
+* Configuring a ~.env~ file
+#+begin_src shell :tangle ../.env
+APP_MINIO_MAX_SIZE=
+APP_MINIO_HOST=localhost:9000
+APP_MINIO_ACCESS_KEY=minio-file-server
+APP_MINIO_SECRET_KEY=minio-file-server
+APP_MINIO_BUCKET=bucket
+APP_MINIO_USE_SSL=false
+#+end_src
 
+* Launching
+Compile and run:
+#+begin_src shell :results silent :dir ../
+  go run main.go
+#+end_src
+
+* Uninstall
+Remove minio from the development cluster
 #+begin_src shell :results silent
   helm uninstall minio -n minio-file-server-dev
 #+end_src
 
+* Docs
+To run the docs in development, use:
+#+begin_src sh :dir .././
+docker run --rm -it -p 8000:8000 -v ${PWD}:/docs:ro,Z squidfunk/mkdocs-material
+#+end_src
