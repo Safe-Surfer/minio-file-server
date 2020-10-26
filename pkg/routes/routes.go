@@ -26,10 +26,11 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 
 		requestPath := r.URL.Path
 		if strings.HasSuffix(requestPath, string(filepath.Separator)) {
+			tidyRequestPath := requestPath
 			if requestPath == "/" {
-				requestPath = ""
+				tidyRequestPath = ""
 			}
-			filesList := fileserverminio.List(minioClient, requestPath)
+			filesList := fileserverminio.List(minioClient, tidyRequestPath)
 			files, err := templating.Template(templating.TemplateListing, templating.TemplateListingObject{
 				SiteTitle: common.GetAppSiteTitle(),
 				Path:      requestPath,
