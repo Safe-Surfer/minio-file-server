@@ -49,6 +49,7 @@
 | service.type                                  | The service type to create                                                       | `ClusterIP`                                      |
 | service.port                                  | The port to bind the app on and for the service to be set to                     | `8080`                                           |
 | ingress.enabled                               | Create an ingress manifests                                                      | false                                            |
+| ingress.realIPHeader                          | A header to forward, which contains the real client IP address                   | `""`                                             |
 | ingress.annotations                           | Set annotations for the ingress manifest                                         | `{}`                                             |
 | ingress.hosts                                 | The hosts which the ingress endpoint should be accessed from                     |                                                  |
 | ingress.tls                                   | References to TLS secrets                                                        | `[]`                                             |
