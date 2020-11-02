@@ -118,7 +118,7 @@ lint_helm_chart:
         fi
     - cat helm.tar.gz | tar --directory /usr/local/bin --extract -xz --strip-components 1 linux-amd64/helm
   script:
-    - helm lint k8s-manifests/helm
+    - helm lint deployments/minio-file-server
 
 pages:
   image: python:3.8-buster
