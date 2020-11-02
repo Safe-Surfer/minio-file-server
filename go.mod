@@ -10,6 +10,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/minio/minio-go v1.0.0
 	github.com/minio/minio-go/v7 v7.0.5
+	github.com/prometheus/client_golang v1.8.0
 	github.com/rs/cors v1.7.0
 	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee // indirect
 	golang.org/x/net v0.0.0-20201010224723-4f7140c49acb // indirect

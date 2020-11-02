@@ -16,6 +16,8 @@
 | `APP_HEALTH_PORT_ENABLED` | Enable binding of a health port                               | `true`              |
 | `APP_HEALTH_PORT`         | The port to bind to for health checking                       | `:8081`             |
 | `APP_PORT`                | The port to serve traffic on                                  | `:8080`             |
+| `APP_METRICS_ENABLED`     | Enable binding of a metrics port                              | `true`              |
+| `APP_PORT_METRICS`        | The port to bind for metrics traffic                          | `:2112`             |
 
 # Helm configuration<a id="sec-2"></a>
 
@@ -55,7 +57,7 @@
 | autoscaling.minReplicas                       | The minimum amount of Pods to run                                                | `1`                                              |
 | autoscaling.maxReplicas                       | The maximum amount of Pods to run                                                | `1`                                              |
 | autoscaling.targetCPUUtilizationPercentage    | The individual Pod CPU amount until autoscaling occurs                           | `80`                                             |
-| autoscaling.targetMemoryUtilizationPercentage | The individual Pod Memory amount until autoscaling occurs                        |
+| autoscaling.targetMemoryUtilizationPercentage | The individual Pod Memory amount until autoscaling occurs                        |                                                  |
 | nodeSelector                                  | Declare the node labels for Pod scheduling                                       | `{}`                                             |
 | tolerations                                   | Declare the toleration labels for Pod scheduling                                 | `[]`                                             |
 | affinity                                      | Declare the affinity settings for the Pod scheduling                             | `{}`                                             |

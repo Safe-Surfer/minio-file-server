@@ -14,6 +14,7 @@ import (
 	"gitlab.com/safesurfer/minio-file-server/pkg/minio"
 	"gitlab.com/safesurfer/minio-file-server/pkg/routes"
 	"gitlab.com/safesurfer/minio-file-server/pkg/handlers"
+	"gitlab.com/safesurfer/minio-file-server/pkg/metrics"
 )
 
 // HandleWebserver ...
@@ -23,6 +24,8 @@ func HandleWebserver() {
 
 	envFile := common.GetAppEnvFile()
 	_ = godotenv.Load(envFile)
+
+	go metrics.Handle()
 
 	port := common.GetAppPort()
 	minioHost := common.GetAppMinioHost()
