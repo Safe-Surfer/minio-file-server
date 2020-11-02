@@ -9,6 +9,10 @@ metadata:
     {{- toYaml . | nindent 4 }}
 {{- end }}
 {{- end }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/scheme: http
+    prometheus.io/port: "2112"
 spec:
   type: {{ .Values.service.type }}
   ports:

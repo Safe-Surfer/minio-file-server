@@ -78,6 +78,18 @@ func GetAppPort() (output string) {
 	return GetEnvOrDefault("APP_PORT", ":8080")
 }
 
+// GetAppMetricsPort ...
+// return the port which the app should serve metrics on
+func GetAppMetricsPort() (output string) {
+	return GetEnvOrDefault("APP_PORT_METRICS", ":2112")
+}
+
+// GetAppMetricsEnabled ...
+// serve metrics endpoint
+func GetAppMetricsEnabled() (output string) {
+	return GetEnvOrDefault("APP_METRICS_ENABLED", "true")
+}
+
 // GetEnvOrDefault ...
 // given an env var return it's value, else return a default
 func GetEnvOrDefault(envName string, defaultValue string) (output string) {

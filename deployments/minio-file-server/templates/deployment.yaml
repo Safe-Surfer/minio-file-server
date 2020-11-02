@@ -21,6 +21,9 @@ spec:
     metadata:
     {{- with .Values.podAnnotations }}
       annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "2112"
+        prometheus.io/scrape: "true"
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
@@ -51,6 +54,9 @@ spec:
               protocol: TCP
             - name: httphealth
               containerPort: 8081
+              protocol: TCP
+            - name: prometheus
+              containerPort: 2112
               protocol: TCP
           livenessProbe:
             httpGet:
