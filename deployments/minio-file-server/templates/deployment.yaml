@@ -79,6 +79,8 @@ spec:
             - name: APP_SITE_TITLE
               value: {{ .Values.siteTitle }}
           {{- end }}
+            - name: APP_HTTP_REAL_IP_HEADER
+              value: {{ .Values.ingress.realIPHeader }}
           {{- if .Values.minio.enabled }}
             - name: APP_MINIO_HOST
               valueFrom:

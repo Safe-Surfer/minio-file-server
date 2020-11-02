@@ -90,6 +90,12 @@ func GetAppMetricsEnabled() (output string) {
 	return GetEnvOrDefault("APP_METRICS_ENABLED", "true")
 }
 
+// GetAppRealIPHeader ...
+// the header to use instead of r.RemoteAddr
+func GetAppRealIPHeader() (output string) {
+	return GetEnvOrDefault("APP_HTTP_REAL_IP_HEADER", "")
+}
+
 // GetEnvOrDefault ...
 // given an env var return it's value, else return a default
 func GetEnvOrDefault(envName string, defaultValue string) (output string) {
@@ -100,12 +106,24 @@ func GetEnvOrDefault(envName string, defaultValue string) (output string) {
 	return output
 }
 
+// GetRequestIP ...
+// returns r.RemoteAddr unless RealIPHeader is set
+func GetRequestIP(r *http.Request) (requestIP string) {
+	realIPHeader := GetAppRealIPHeader()
+	headerValue := r.Header.Get(realIPHeader)
+	if realIPHeader == "" || headerValue == "" {
+		return r.RemoteAddr
+	}
+	return headerValue
+}
+
 // Logging ...
 // a basic middleware for logging
 func Logging(next http.Handler) http.Handler {
 	// log all requests
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%v %v %v %v %v %#v", r.Method, r.URL, r.Proto, r.Response, r.RemoteAddr, r.Header)
+		requestIP := GetRequestIP(r)
+		log.Printf("%v %v %v %v %v %v %#v", r.Method, r.URL, r.Proto, r.Response, requestIP, r.RemoteAddr, r.Header)
 		next.ServeHTTP(w, r)
 	})
 }
