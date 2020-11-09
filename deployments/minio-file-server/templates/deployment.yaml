@@ -59,16 +59,14 @@ spec:
               containerPort: 2112
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: httphealth
+            tcpSocket:
+              port: http
             initialDelaySeconds: 2
             failureThreshold: 10
             periodSeconds: 10
           readinessProbe:
-            httpGet:
-              path: /
-              port: httphealth
+            tcpSocket:
+              port: http
             initialDelaySeconds: 2
             failureThreshold: 10
             periodSeconds: 10
