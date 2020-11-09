@@ -22,7 +22,7 @@ We appreciate all the help which will come from this project, so we greatly than
 
 # Community Agreements<a id="sec-2"></a>
 
-To contribute to the Android app project, please read [the community agreements docs](<https://gitlab.com/safesurfer/community/-/blob/master/docs/CONTRIBUTING.md>).
+To contribute to this project, please read [the community agreements docs](<https://gitlab.com/safesurfer/community/-/blob/master/docs/CONTRIBUTING.md>).
 
 # Your first commit<a id="sec-3"></a>
 

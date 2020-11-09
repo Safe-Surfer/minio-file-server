@@ -4,7 +4,3 @@
 A basic webserver to share a MinIO bucket
 #+end_quote
 
-* Docs
-- [[./development.md][development]]
-- [[./deployment.md][deployment]]
-- [[./contributing.md][contributing]]
