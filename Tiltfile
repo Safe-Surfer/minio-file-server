@@ -1,3 +1,5 @@
+#!/bin/python
+
 yaml = helm(
   'deployments/minio-file-server',
   name='minio-file-server-dev',
@@ -25,5 +27,10 @@ helm_remote(
       "resources.requests.memory=1Gi"
   ]
   )
-docker_build('registry.gitlab.com/safesurfer/minio-file-server', '.', dockerfile="build/Dockerfile")
+
+containerRepo='registry.gitlab.com/safesurfer/minio-file-server'
+if os.getenv('KIND_EXPERIMENTAL_PROVIDER') == 'podman' and k8s_context() == 'kind-kind':
+    custom_build(containerRepo, 'podman build -f build/Dockerfile -t $EXPECTED_REF . && podman save $EXPECTED_REF > /tmp/tilt-containerbuild.tar.gz && kind load image-archive /tmp/tilt-containerbuild.tar.gz', ['.'], disable_push=True, skips_local_docker=True)
+else:
+    docker_build(containerRepo, '.', dockerfile="build/Dockerfile")
 allow_k8s_contexts('in-cluster')

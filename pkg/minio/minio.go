@@ -22,19 +22,24 @@ func Open(endpoint string, accessKey string, secretKey string, useSSL bool) (*mi
 
 // Get ...
 // retrieves a given object
-func Get(minioClient *minio.Client, filePath string) (objectBytes []byte, err error) {
+func Get(minioClient *minio.Client, filePath string) (objectBytes []byte, objectInfo minio.ObjectInfo, err error) {
 	object, err := minioClient.GetObject(context.TODO(), common.GetAppMinioBucket(), filePath, minio.GetObjectOptions{})
 	if err != nil {
 		log.Printf("%#v\n", err)
-		return []byte{}, err
+		return []byte{}, minio.ObjectInfo{}, err
 	}
 	defer object.Close()
+	objectInfo, err = object.Stat()
+	if err != nil {
+		log.Printf("%#v\n", err)
+		return []byte{}, minio.ObjectInfo{}, err
+	}
 	objectBytes, err = ioutil.ReadAll(object)
 	if err != nil {
 		log.Printf("%#v\n", err)
-		return []byte{}, err
+		return []byte{}, minio.ObjectInfo{}, err
 	}
-	return objectBytes, err
+	return objectBytes, objectInfo, err
 }
 
 // List ...

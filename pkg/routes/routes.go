@@ -5,6 +5,7 @@
 package routes
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -47,13 +48,17 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 			return
 		}
 
-		object, err := fileserverminio.Get(minioClient, requestPath)
+		object, objectInfo, err := fileserverminio.Get(minioClient, requestPath)
 		if err != nil {
 			log.Printf("%#v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("An error occurred with retrieving the requested object"))
 			return
 		}
+		log.Println(objectInfo.Key, objectInfo.Size, objectInfo.ContentType)
+		w.Header().Set("content-length", fmt.Sprintf("%d", objectInfo.Size))
+		w.Header().Set("content-type", objectInfo.ContentType)
+		w.Header().Set("accept-ranges", "bytes")
 		w.WriteHeader(http.StatusOK)
 		w.Write(object)
 	}
