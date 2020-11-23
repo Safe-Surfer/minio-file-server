@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/rs/cors"
 	"github.com/joho/godotenv"
 
 	"gitlab.com/safesurfer/minio-file-server/pkg/common"
@@ -47,15 +46,8 @@ func HandleWebserver() {
 
 	router.Use(common.Logging)
 
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedHeaders:   []string{"*"},
-		AllowedMethods:   []string{"GET"},
-		AllowCredentials: true,
-	})
-
 	srv := &http.Server{
-		Handler:      c.Handler(router),
+		Handler:      router,
 		Addr:         port,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
