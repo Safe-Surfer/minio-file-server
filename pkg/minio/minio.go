@@ -2,7 +2,7 @@ package minio
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"log"
 
 	minio "github.com/minio/minio-go/v7"
@@ -10,6 +10,11 @@ import (
 
 	"gitlab.com/safesurfer/minio-file-server/pkg/common"
 )
+
+type ReadCloseSeeker interface {
+	io.ReadCloser
+	io.Seeker
+}
 
 // Open ...
 // open a Minio client
@@ -22,24 +27,20 @@ func Open(endpoint string, accessKey string, secretKey string, useSSL bool) (*mi
 
 // Get ...
 // retrieves a given object
-func Get(minioClient *minio.Client, filePath string) (objectBytes []byte, objectInfo minio.ObjectInfo, err error) {
+func Get(minioClient *minio.Client, filePath string) (objectSeeker ReadCloseSeeker, objectInfo minio.ObjectInfo, err error) {
 	object, err := minioClient.GetObject(context.TODO(), common.GetAppMinioBucket(), filePath, minio.GetObjectOptions{})
+	objectSeeker = object
 	if err != nil {
 		log.Printf("%#v\n", err)
-		return []byte{}, minio.ObjectInfo{}, err
+		return nil, minio.ObjectInfo{}, err
 	}
-	defer object.Close()
+
 	objectInfo, err = object.Stat()
 	if err != nil {
 		log.Printf("%#v\n", err)
-		return []byte{}, minio.ObjectInfo{}, err
+		return nil, minio.ObjectInfo{}, err
 	}
-	objectBytes, err = ioutil.ReadAll(object)
-	if err != nil {
-		log.Printf("%#v\n", err)
-		return []byte{}, minio.ObjectInfo{}, err
-	}
-	return objectBytes, objectInfo, err
+	return objectSeeker, objectInfo, err
 }
 
 // List ...

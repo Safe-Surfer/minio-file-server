@@ -5,10 +5,12 @@
 package routes
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	minio "github.com/minio/minio-go/v7"
@@ -55,12 +57,19 @@ func GetOrListObject(minioClient *minio.Client) http.HandlerFunc {
 			w.Write([]byte("An error occurred with retrieving the requested object"))
 			return
 		}
-		log.Println(objectInfo.Key, objectInfo.Size, objectInfo.ContentType)
-		w.Header().Set("content-length", fmt.Sprintf("%d", objectInfo.Size))
-		w.Header().Set("content-type", objectInfo.ContentType)
-		w.Header().Set("accept-ranges", "bytes")
-		w.WriteHeader(http.StatusOK)
-		w.Write(object)
+		defer object.Close()
+		filename := url.PathEscape(path.Base(objectInfo.Key))
+		fileSize := strconv.Itoa(int(objectInfo.Size))
+		log.Println(filename, fileSize, objectInfo.ContentType)
+		w.Header().Set("Content-Length", fileSize)
+		w.Header().Set("Accept-Ranges", "bytes")
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("Content-Security-Policy", "Frame-ancestors 'none'")
+		w.Header().Set("Content-Type", objectInfo.ContentType)
+		w.Header().Set("Content-Disposition", "attachment;filename=\""+filename+"\"; filename*=UTF-8''"+filename)
+		w.Header().Set("Cache-Control", "private, no-cache")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		http.ServeContent(w, r, filename, objectInfo.LastModified, object)
 	}
 }
 
